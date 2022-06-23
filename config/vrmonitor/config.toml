@@ -1,0 +1,4 @@
+[mongo]
+db = "virtuareal"
+host = "localhost"
+port = 27017
