@@ -2,3 +2,7 @@
 db = "virtuareal"
 host = "localhost"
 port = 27017
+
+[net]
+port = 8393
+host = "0.0.0.0"
