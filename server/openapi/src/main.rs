@@ -7,7 +7,7 @@ use warp::Filter;
 mod danmaku;
 mod superchat;
 
-use std::{net::{Ipv4Addr, Ipv6Addr, IpAddr, SocketAddr}, path::Path};
+use std::{net::{Ipv4Addr, Ipv6Addr, IpAddr, SocketAddr}, path::Path, fmt::format};
 
 fn parse_config() -> config::Config {
     let mut args = std::env::args().skip(1);
@@ -39,6 +39,7 @@ async fn main() {
     let config = parse_config();
     let host = config.mongo.host;
     let port = Some(config.mongo.port);
+    let net_addr = format!("{}:{}", config.net.host, config.net.port).parse::<SocketAddr>().expect("invalid net config");
     let options = ClientOptions::builder().hosts(vec![ServerAddress::Tcp{host, port}]).build();
     let db = mongodb::Client::with_options(options).map(|client| {
         client.database(config.mongo.db.as_str())
@@ -70,6 +71,6 @@ async fn main() {
 
     let route = danmaku.or(superchat);
     warp::serve(route)
-        .run(([127, 0, 0, 1], 3030))
+        .run(net_addr)
         .await;
 }
