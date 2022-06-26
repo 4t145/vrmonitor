@@ -27,36 +27,38 @@
       </v-navigation-drawer>
 
       <v-content>
-        <LiverCard v-for="liver in livers" v-bind:key="liver.uid" :liver="liver"/>
+        <Router/>
       </v-content>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
+import { h } from "vue";
+import { Component } from 'vue';
 import { defineComponent } from 'vue'
-import LiverCard from './components/LiverCard.vue'
+
+import NotFound from './pages/NotFound.vue'
+import LiverIndex from './pages/LiverIndex.vue'
+import Router from './Router.vue'
+
 
 export default defineComponent({
   name: 'App',
-
   components: {
-    LiverCard
-},
-
+    Router
+  },
+  computed: {
+    
+  },
   data () {
     return {
+      current_route: window.location.pathname,
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard' },
         { title: 'Photos',    icon: 'mdi-image' },
         { title: 'About',     icon: 'mdi-help-box' },
       ],
-      livers: [
-        { uid: 10000, uname: "索维尔sower", roomid: 0, avatar: new URL("https://i2.hdslb.com/bfs/face/9a0b05e498c2a2eabb336267179c0e3b865ece6d.jpg@150w_150h.jpg"), living: false},
-        { uid: 10000, uname: "Demo", roomid: 0, avatar: new URL("https://i2.hdslb.com/bfs/face/9a0b05e498c2a2eabb336267179c0e3b865ece6d.jpg@150w_150h.jpg"), living: false},
-        { uid: 10000, uname: "Demo", roomid: 0, avatar: new URL("https://i2.hdslb.com/bfs/face/9a0b05e498c2a2eabb336267179c0e3b865ece6d.jpg@150w_150h.jpg"), living: false},
-        { uid: 10000, uname: "Demo", roomid: 0, avatar: new URL("https://i2.hdslb.com/bfs/face/9a0b05e498c2a2eabb336267179c0e3b865ece6d.jpg@150w_150h.jpg"), living: false},
-      ]
     }
   },
 })

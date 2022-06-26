@@ -7,7 +7,7 @@ use warp::Filter;
 mod danmaku;
 mod superchat;
 
-use std::{net::{Ipv4Addr, Ipv6Addr, IpAddr, SocketAddr}, path::Path, fmt::format};
+use std::{net::{SocketAddr}, path::Path};
 
 fn parse_config() -> config::Config {
     let mut args = std::env::args().skip(1);
