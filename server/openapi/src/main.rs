@@ -41,7 +41,13 @@ async fn main() {
     let port = Some(config.mongo.port);
     let origins = config.cors.origins.iter().map(|x|x.as_str()).collect::<Vec<&str>>();
 
-    let cors = warp::cors().allow_method("GET").allow_origins(origins).build();
+    let cors = warp::cors().allow_method("GET");
+    let cors = if origins.contains(&"*") {
+        cors.allow_any_origin()
+    } else {
+        cors.allow_origins(origins)
+    };
+    let cors = cors.build();
 
     let net_addr = format!("{}:{}", config.net.host, config.net.port).parse::<SocketAddr>().expect("invalid net config");
     let options = ClientOptions::builder().hosts(vec![ServerAddress::Tcp{host, port}]).build();
