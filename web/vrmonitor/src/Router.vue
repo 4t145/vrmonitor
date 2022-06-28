@@ -4,6 +4,7 @@ import { Component } from 'vue';
 import { defineComponent } from 'vue'
 
 import NotFound from './pages/NotFound.vue'
+import DanmakuHistory from './pages/Stat/DanmakuHistory.vue'
 import LiverIndex from './pages/LiverIndex.vue'
 
 const ROUTE = {
@@ -11,7 +12,7 @@ const ROUTE = {
     '': LiverIndex,
     'livers': LiverIndex,
     'stat': {
-      'danmaku': NotFound
+      'danmaku': DanmakuHistory
     }
   }
 }

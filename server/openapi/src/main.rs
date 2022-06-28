@@ -39,6 +39,10 @@ async fn main() {
     let config = parse_config();
     let host = config.mongo.host;
     let port = Some(config.mongo.port);
+    let origins = config.cors.origins.iter().map(|x|x.as_str()).collect::<Vec<&str>>();
+
+    let cors = warp::cors().allow_method("GET").allow_origins(origins).build();
+
     let net_addr = format!("{}:{}", config.net.host, config.net.port).parse::<SocketAddr>().expect("invalid net config");
     let options = ClientOptions::builder().hosts(vec![ServerAddress::Tcp{host, port}]).build();
     let db = mongodb::Client::with_options(options).map(|client| {
@@ -55,7 +59,7 @@ async fn main() {
         danmaku::query(f, coll).await
         .map(|r|warp::reply::json(&r))
         .map_err(|e| warp::reject::custom::<error::Error>(e.into()))
-    });
+    }).with(cors.clone());
 
     let db_clone = db.clone();
     let superchat = 
@@ -67,7 +71,7 @@ async fn main() {
         superchat::query(f, coll).await
         .map(|r|warp::reply::json(&r))
         .map_err(|e| warp::reject::custom::<error::Error>(e.into()))
-    });
+    }).with(cors);
 
     let route = danmaku.or(superchat);
     warp::serve(route)
