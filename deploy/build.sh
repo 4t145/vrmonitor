@@ -18,9 +18,5 @@ cd ${ROOT_DIR}/server/openapi/
 echo "[build server]"
 cargo build --release
 cd ${ROOT_DIR}
-
 cp ${ROOT_DIR}/server/openapi/target/release/openapi ${ROOT_DIR}/bin
 
-echo "[launch openapi]"
-echo "log file: ${LOG_PATH}/openapi.log"
-nohup ${ROOT_DIR}/bin/openapi ${ROOT_DIR}/config/openapi/config.toml > ${LOG_PATH}/openapi.log &
