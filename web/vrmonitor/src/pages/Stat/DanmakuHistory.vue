@@ -84,9 +84,9 @@
             <tbody>
                 <tr v-for="(danmaku, index) in danmakus" v-bind:key = "index">
                     <td>{{danmaku.time}}</td>
-                    <td>{{danmaku.data.user.uname}}</td>
-                    <td>{{danmaku.data.user.uid}}</td>
-                    <td>{{danmaku.data.message.tag==='Plain'?danmaku.data.message.data.message:danmaku.data.message.data.alt_message}}</td>
+                    <td>{{danmaku.uname}}</td>
+                    <td>{{danmaku.uid}}</td>
+                    <td>{{danmaku.message}}</td>
                 </tr>
             </tbody>
         </v-table>
@@ -123,32 +123,43 @@
             },
             loading: false,
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            danmakus: [] as ExtendedEvent<DanmakuEvent> []
+            danmakus: [] as {
+                time: string,
+                uname: string,
+                uid: number,
+                message: string
+            } []
         }),
         methods: {
             fetch_data() {
                 if(this.filter.roomid!==undefined) {
                     const roomid = this.filter.roomid;
-                    const from = moment(this.filter.time_from).unix();
-                    const to = moment(this.filter.time_to).unix();
+                    const from = moment(this.filter.time_from).unix() * 1000;
+                    const to = moment(this.filter.time_to).unix() * 1000;
                     console.log(from);
                     console.log(to);
                     let query = {
-                        'user': undefined as number|undefined,
+                        'uid': undefined as number|undefined,
                         'time_from': from,
                         'time_to': to,
                         'limit': 100,
                         'skip': 0
                     };
-                    if(this.filter.uid) {
-
-                        query["user"] = this.filter.uid.uid
+                    if(this.filter.uid.enable) {
+                        query["uid"] = this.filter.uid.uid
                     }
                     this.loading = true;
 
                     fetch_danmaku_history(roomid, query).then(
                         resp => {
-                            this.danmakus = resp;
+                            this.danmakus = resp.map(
+                                (e) => ({
+                                    uname: e.data.user.uname,
+                                    uid: e.data.user.uid,
+                                    message: e.data.message.tag === 'Plain'? e.data.message.data.message:e.data.message.data.alt_message,
+                                    time: moment(e.timestamp).toLocaleString()
+                                })
+                            );
                             this.loading = false;
                         }
                     );

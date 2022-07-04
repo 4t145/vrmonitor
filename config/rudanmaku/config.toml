@@ -28,7 +28,7 @@ channel = ["json", "bincode"]
 # 三期
 ## Muri
 [[room]]
-roomid = 455916618
+roomid = 21571739
 channel = ["json", "bincode"]
 
 # 四期

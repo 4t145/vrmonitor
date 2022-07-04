@@ -45,3 +45,4 @@ export async function fetch_user_info(uid: number): Promise<UserInfo> {
         throw new Error(`HttpError${resp.statusText}`);
     }
 }
+

@@ -1,13 +1,13 @@
-const OPEN_API_BASE = "http://158.247.231.91:443/";
+const OPEN_API_BASE = "http://158.247.231.91/";
 
 import { DanmakuEvent, Event } from "bilive-danmaku-json";
 
 export type ExtendedEvent<E extends Event> = E & {
-    time: number
+    timestamp: number
 }
 
 type DanmakuQuery = {
-    'user'?: number,
+    'uid'?: number,
     'time_from': number,
     'time_to': number,
     'limit': number,
@@ -19,7 +19,9 @@ type DanmakuQuery = {
 function as_query(query: {[key: string]: number|string|boolean}): string {
     let query_string = [];
     for(const key of Object.keys(query)) {
-        query_string.push(`${key}=${query[key]}`)
+        if(query[key]) {
+            query_string.push(`${key}=${query[key]}`)
+        }
     }
     return query_string.join('&');
 }
